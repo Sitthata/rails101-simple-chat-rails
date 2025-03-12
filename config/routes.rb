@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   get "rooms/summary" => "rooms#summary"
-  resources :rooms
-  resources :messages
+  resources :rooms do
+    resources :messages
+  end
 
   # Try to solve using nested routes
   # resources :rooms do

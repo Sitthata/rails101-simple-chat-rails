@@ -1,9 +1,10 @@
 class MessagesController < ApplicationController
+  before_action :set_room
   before_action :set_message, only: %i[ show edit update destroy ]
 
   # GET /messages or /messages.json
   def index
-    @messages = Message.all
+    @messages = @room.messages
   end
 
   # GET /messages/1 or /messages/1.json
@@ -12,7 +13,7 @@ class MessagesController < ApplicationController
 
   # GET /messages/new
   def new
-    @message = Message.new
+    @message = Message.new(room: @room)
   end
 
   # GET /messages/1/edit
@@ -21,11 +22,11 @@ class MessagesController < ApplicationController
 
   # POST /messages or /messages.json
   def create
-    @message = Message.new(message_params)
+    @message = Message.new(message_params.merge(room: @room))
 
     respond_to do |format|
       if @message.save
-        format.html { redirect_to @message, notice: "Message was successfully created." }
+        format.html { redirect_to [ @room, @message ], notice: "Message was successfully created." }
         format.json { render :show, status: :created, location: @message }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -58,6 +59,9 @@ class MessagesController < ApplicationController
   end
 
   private
+    def set_room
+      @room = Room.find(params[:room_id])
+    end
     # Use callbacks to share common setup or constraints between actions.
     def set_message
       @message = Message.find(params.expect(:id))
@@ -65,6 +69,6 @@ class MessagesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def message_params
-      params.expect(message: [ :content ])
+      params.require(:message).permit(:content, :room_id)
     end
 end
