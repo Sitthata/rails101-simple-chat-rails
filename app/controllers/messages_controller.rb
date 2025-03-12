@@ -1,5 +1,5 @@
 class MessagesController < ApplicationController
-  before_action :set_room
+  before_action :set_room, only: %i[ index new create ]
   before_action :set_message, only: %i[ show edit update destroy ]
 
   # GET /messages or /messages.json

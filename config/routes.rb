@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   get "rooms/summary" => "rooms#summary"
   resources :rooms do
-    resources :messages
+    # resources :messages
+    # No need to provide room id in the URL for messages
+    resources :messages, shallow: true
   end
 
   # Try to solve using nested routes

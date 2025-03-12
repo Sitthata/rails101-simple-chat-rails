@@ -3,8 +3,8 @@
 <%= render @message %>
 
 <div>
-  <%= link_to "Edit this message", edit_room_message_path(@message) %> |
-  <%= link_to "Back to messages", room_messages_path %>
+  <%= link_to "Edit this message", edit_message_path(@message) %> |
+  <%= link_to "Back to messages", room_messages_path(@message.room) %>
 
-  <%= button_to "Destroy this message", [@room, @message], method: :delete %>
+  <%= button_to "Destroy this message", @message, method: :delete %>
 </div>
