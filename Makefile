@@ -27,7 +27,7 @@ run: install
 
 # Run tests
 test:
-	bin/rails test
+	bundle exec rspec
 
 # Clean up
 clean:
