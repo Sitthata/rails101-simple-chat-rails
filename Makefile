@@ -35,4 +35,10 @@ clean:
 	bin/rails db:create RAILS_ENV=$(RAILS_ENV)
 	bin/rails db:migrate RAILS_ENV=$(RAILS_ENV)
 
+lint:
+	bundle exec rubocop
+
+format:
+	bundle exec rubocop -a
+
 .PHONY: all setup install_gems setup_db start test clean
