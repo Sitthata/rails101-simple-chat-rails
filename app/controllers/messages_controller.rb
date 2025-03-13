@@ -26,8 +26,10 @@ class MessagesController < ApplicationController
 
     respond_to do |format|
       if @message.save
+        @message.broadcast_append_to @message.room, partial: @message,
+          locals: { message: @message }, target: "room-messages"
+        format.turbo_stream
         format.html { redirect_to [ @room, @message ], notice: "Message was successfully created." }
-        format.json { render :show, status: :created, location: @message }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @message.errors, status: :unprocessable_entity }
@@ -53,8 +55,9 @@ class MessagesController < ApplicationController
     @message.destroy!
 
     respond_to do |format|
-      format.html { redirect_to messages_path, status: :see_other, notice: "Message was successfully destroyed." }
-      format.json { head :no_content }
+      @message.broadcast_remove_to @message.room, target: @message
+      format.turbo_stream
+      format.html { redirect_to message_path, status: :see_other, notice: "Message was successfully destroyed." }
     end
   end
 
@@ -64,7 +67,7 @@ class MessagesController < ApplicationController
     end
     # Use callbacks to share common setup or constraints between actions.
     def set_message
-      @message = Message.find(params.expect(:id))
+      @message = Message.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.

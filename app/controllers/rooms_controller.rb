@@ -1,14 +1,19 @@
 class RoomsController < ApplicationController
   before_action :set_room, only: %i[ show edit update destroy ]
-  before_action :authenticate_user!
+  # before_action :authenticate_user!
 
   # GET /rooms or /rooms.json
   def index
     @rooms = Room.all
+    @room = @rooms[0] unless @rooms.empty?
+    @messages = []
+    @messages = @room.messages unless @rooms.empty?
   end
 
   # GET /rooms/1 or /rooms/1.json
   def show
+    @room = Room.find(params[:id])
+    @messages = @room.messages
   end
 
   # GET /rooms/new
@@ -28,6 +33,7 @@ class RoomsController < ApplicationController
       if @room.save
         format.html { redirect_to @room, notice: "Room was successfully created." }
         format.json { render :show, status: :created, location: @room }
+        format.turbo_stream
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @room.errors, status: :unprocessable_entity }
