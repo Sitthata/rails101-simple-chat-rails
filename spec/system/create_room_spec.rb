@@ -6,7 +6,9 @@ RSpec.describe "#Create Room", type: :system do
 
     before do
       driven_by(:selenium_chrome_headless)
-      user_login
+      Warden.test_mode!
+      login_as(user, scope: :user)
+      # user_login
       create(:room, name: "Odts New Room", description: "This is a test room.")
       save_and_open_screenshot
     end
